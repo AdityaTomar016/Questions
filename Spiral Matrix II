@@ -1,0 +1,51 @@
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        
+        vector<vector<int>>mat(n,vector<int>(n,0));
+        
+        int row_s = 0;
+        int row_e = n-1;
+        int col_s = 0;
+        int col_e = n-1;
+        int number = 1;
+        
+        while(row_s <= row_e && col_s <= col_e){
+            
+            //for row start
+            for(int c=col_s ; c<=col_e ; c++){
+               mat[row_s][c] = number;
+                number++;
+            }
+            row_s++;
+            
+            //for coloumn end
+             for(int r=row_s ; r<=row_e ; r++){
+               mat[r][col_e] = number;
+                number++;
+            }
+            col_e--;
+            
+                
+            //for row end
+             for(int c=col_e ; c>=col_s ; c--){
+               mat[row_e][c] = number;
+                number++;
+            }
+                row_e--;
+                
+                
+            //for column start
+             for(int r=row_e ; r>=row_s ; r--){
+               mat[r][col_s] = number;
+                number++;
+            }
+                 col_s++;
+            
+            
+        }
+        
+        return mat;
+        
+    }
+};
