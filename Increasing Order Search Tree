@@ -1,0 +1,36 @@
+class Solution {
+public:
+    void inorder(TreeNode* root,vector<int>&vec)
+    {
+        if(root==NULL)
+            return;
+        
+        inorder(root->left,vec);
+        vec.push_back(root->val);
+        inorder(root->right,vec);
+        
+    }
+    
+    TreeNode* build(vector<int>&vec,int start )
+    {
+        if(start>vec.size()-1)
+            return NULL;
+        
+        TreeNode* node = new TreeNode(vec[start]);
+        start++;
+        node->left=NULL;
+        node->right=build(vec,start);
+        
+        return node;
+    }
+    TreeNode* increasingBST(TreeNode* root) {
+        
+        if(root==NULL)
+            return NULL;
+        vector<int>vec;
+        int start=0;
+        inorder(root,vec);
+        
+        return build(vec,0);
+    }
+};
