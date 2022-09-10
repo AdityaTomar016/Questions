@@ -4,35 +4,33 @@ public:
         
         int n = heights.size();
         
-        vector<int>left(n);
-        vector<int>right(n);
+        int water = 0;
         
-        int mx = heights[0];
+        int left=0,right=n-1;
+        int leftmax=0,rightmax=0;
         
-        for(int i=0;i<n;i++){
-            if(heights[i]  >  mx){
-                mx = heights[i];
+        while(left<right){
+            if(heights[left] < heights[right]){
+                
+                if(heights[left] < leftmax){
+                water += leftmax - heights[left];
             }
-            left[i] = mx;
-        }
-        
-        mx = heights[n-1];
-        
-        for(int i=n-1;i>=0;i--){
-            if(heights[i]  >  mx){
-                mx = heights[i];
+                else leftmax = heights[left];
+                
+                left++;
+                
             }
-            right[i] = mx;
+            else{
+                if(heights[right] < rightmax){
+                water += rightmax - heights[right];
+            }
+                else rightmax = heights[right];
+                
+                right--;
+            }
+            
         }
-        
-        
-        
-        int total = 0;
-        
-        for(int i=0;i<n;i++){
-            int water = min(left[i],right[i]) - heights[i];
-            total+=water;
-        }
-        return total;
+   
+        return water;
     }
 };
