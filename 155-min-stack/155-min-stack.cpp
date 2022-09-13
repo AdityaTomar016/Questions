@@ -1,40 +1,56 @@
 class MinStack {
 public:
-    
-    int v[100000];
-    int topelement;
+    stack<long long>st;
+    long long mini;
     
     MinStack() {
-        topelement = -1;
+        while(!st.empty()) st.pop();
+        mini = INT_MAX;
     }
     
-    void push(int val) {
-        if(topelement == -1){
-            topelement++;
-            v[topelement] = val;
-            topelement++;
-            v[topelement] = val;
+    void push(int value) {
+        
+        long long val = value;
+        
+        if(st.empty()){
+            st.push(val);
+            mini = val;
         }
-        else{
-            int x = min(v[topelement], val);
-            
-            topelement++;
-            v[topelement] = val;
-            topelement++;
-            v[topelement] = x;
+        else if(val < mini){
+            st.push(2*val*1LL - mini);
+            mini = val;
+        }
+        else {
+            st.push(val);
         }
     }
     
     void pop() {
-        topelement-=2;
+        
+        if(st.empty()) return;
+        
+        long long x = st.top();
+        st.pop();
+        
+        if(x < mini){
+            mini = (2*mini - x);
+        }
+        
     }
     
     int top() {
-        return v[topelement-1];
+        if(st.empty()) return -1;
+        
+        long long x = st.top();
+        
+        if(x < mini){
+           return mini;
+        }
+        else return x;
     }
     
     int getMin() {
-        return v[topelement];
+        return mini;
     }
 };
 
