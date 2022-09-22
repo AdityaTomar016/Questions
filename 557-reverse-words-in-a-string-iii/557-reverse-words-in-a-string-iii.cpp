@@ -3,31 +3,27 @@ public:
     string reverseWords(string s) {
         
         int j=0,size=0;
-        vector<string>v;
         
         for(int i=0;i<s.size();i++){
             
             if(isspace(s[i])){
-                string rev = s.substr(j,size);
-                reverse(rev.begin(),rev.end());
-                v.push_back(rev + " ");
+                
+                reverse(s.begin()+j,s.begin()+i);
                 j = i+1;
-                size=0;
-                continue;
+
             }
-            
-            size++;
+
         }
         
-        string rev = s.substr(j);
-        reverse(rev.begin(),rev.end());
-        v.push_back(rev);
         
-        s = "";
+        reverse(s.begin()+j,s.end());
+
         
-        for(auto i: v){
-            s += i;
-        }
+//         s = "";
+        
+//         for(auto i: v){
+//             s += i;
+//         }
         
         return s;
     }
