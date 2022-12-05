@@ -1,20 +1,30 @@
 class Solution {
 public:
     vector<vector<int>> findWinners(vector<vector<int>>& matches) {
-         map<int,int> lost;
-        for (auto m : matches)
-        {
-            if (!lost.count(m[0])) lost[m[0]] = 0;
-            lost[m[1]]++;
+        
+        map<int,int>mp;
+        
+        for(auto i: matches){
+            mp[i[1]]++;
+        }
+        vector<int>z,o;
+        for(auto i: mp){
+            if(i.second == 1){
+                o.push_back(i.first);
+            }
         }
         
-        vector<int> zero, ones;
-        for (auto[k,l] : lost)
-        {
-            if (l == 0) zero.push_back(k);
-            if (l == 1) ones.push_back(k);
+        set<int>s;
+        for(auto i: matches){
+            if(mp.find(i[0]) == mp.end()){
+                s.insert(i[0]);
+            }
         }
         
-        return {zero,ones};
+        for(auto i:s){
+            z.push_back(i);
+        }
+        
+        return {z,o};
     }
 };
