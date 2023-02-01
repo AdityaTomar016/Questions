@@ -30,6 +30,9 @@ public:
             string divisor = str2.substr(0,i+1);
             int len = divisor.size();
             
+            if(n % len || m % len){
+                continue;
+            }
             if(solve(str1,len,divisor) && solve(str2,len,divisor)){
                 ans = divisor;
             }
