@@ -34,8 +34,8 @@ public:
             }
             
             for(int j=1;j<=nums[i];j++){
-                if(i+j < n){
-                    dp[i] = dp[i] || dp[i+j];
+                if(i+j < n && dp[i+j]){
+                    dp[i] = true;
                 }
                 
                 if(dp[i] == true){
