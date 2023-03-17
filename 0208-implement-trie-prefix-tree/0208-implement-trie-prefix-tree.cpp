@@ -1,8 +1,8 @@
 struct Node{
     Node *links[26];
-    bool flag = false;
+    bool flag=false;
     
-    bool containskey(char ch){
+    bool alreadyexists(char ch){
         return (links[ch-'a'] != NULL);
     }
     void put(char ch,Node* node){
@@ -15,49 +15,46 @@ struct Node{
 class Trie {
 public:
     Node* root;
+    
     Trie() {
         root = new Node();
     }
     
     void insert(string word) {
         
-        Node* node = root;
-        
+        Node* curr = root;
         for(int i=0;i<word.size();i++){
-            if(!node->containskey(word[i])){
-                node->put(word[i],new Node());
+            if(!curr->alreadyexists(word[i])){
+                curr->put(word[i],new Node());
             }
-            node = node->get(word[i]);
+            
+            curr = curr->get(word[i]);
         }
         
-        node->flag = true;
+        curr->flag = true;
     }
     
     bool search(string word) {
-        
-        Node* node = root;
-        
+        Node* curr = root;
         for(int i=0;i<word.size();i++){
-            if(!node->containskey(word[i])){
+            if(!curr->alreadyexists(word[i])){
                 return false;
             }
             
-            node = node->get(word[i]);
+            curr = curr->get(word[i]);
         }
         
-        return node->flag;
+        return curr->flag;
     }
     
     bool startsWith(string prefix) {
-        
-        Node* node = root;
-        
+        Node* curr = root;
         for(int i=0;i<prefix.size();i++){
-            if(!node->containskey(prefix[i])){
+            if(!curr->alreadyexists(prefix[i])){
                 return false;
             }
             
-            node = node->get(prefix[i]);
+            curr = curr->get(prefix[i]);
         }
         
         return true;
