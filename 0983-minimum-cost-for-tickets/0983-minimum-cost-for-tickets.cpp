@@ -40,12 +40,43 @@ public:
     }
     int mincostTickets(vector<int>& days, vector<int>& costs) {
         
-        vector<int>dp(366,-1);
+        vector<int>dp(367,0);
         
         unordered_set<int>set;
         for(auto i: days){
             set.insert(i);
         }
-        return solve(1,set,costs,dp);
+        
+        
+        for(int i=365;i>=0;i--){
+            int money = 0;
+        
+                if(set.find(i) == set.end()){
+                    money = dp[i+1];
+                }
+                else{
+                    int m = INT_MAX;
+
+                    for(int j=0;j<costs.size();j++){
+                        int curr = costs[j];
+                        if(j == 0){
+                            curr += dp[i+1];
+                        }
+                        else if(j == 1 && i+7 < 366){
+                            curr += dp[i+7];
+                        }
+                        else if(j == 2 && i+30 < 366){
+                            curr += dp[i+30];
+                        }
+
+                        m = min(m,curr);
+                    }
+
+                    money = m;
+                }
+
+                dp[i] = money;
+        }
+        return dp[1];
     }
 };
