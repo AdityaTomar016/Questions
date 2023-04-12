@@ -8,46 +8,39 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
+class cmp{
+  public:
+    bool operator()(ListNode* a,ListNode* b){
+        return a->val > b->val;
+    }
+};
 class Solution {
 public:
-    ListNode* merge(ListNode* l1,ListNode* l2){
-        if(!l1){
-            return l2;
-        }
-        if(!l2){
-            return l1;
-        }
-        
-       if(l1->val > l2->val){
-           swap(l1,l2);
-       }
-        
-        ListNode* res = l1;
-        
-         while(l1 && l2){
-                ListNode* tmp = NULL;
-            
-                while(l1 && l1->val <= l2->val){
-                    tmp = l1;
-                    l1 = l1->next;
-                }
-                tmp->next = l2;
-                
-                swap(l1,l2);
-            }
-        
-        return res;
-    }
+
     ListNode* mergeKLists(vector<ListNode*>& lists) {
         
-        if(lists.size() == 0){
-            return NULL;
+        priority_queue<ListNode*,vector<ListNode*>,cmp>pq;
+        
+        for(auto i: lists){
+            if(i != NULL){
+                pq.push(i);
+            }
         }
-        while(lists.size() > 1){
-            lists.push_back(merge(lists[0],lists[1]));
-            lists.erase(lists.begin());
-            lists.erase(lists.begin());
+        
+        ListNode* dummy = new ListNode(-1);
+        ListNode* curr = dummy;
+        
+        while(!pq.empty()){
+            curr->next = pq.top();
+            pq.pop();
+            curr = curr->next;
+            
+            if(curr->next){
+                pq.push(curr->next);
+            }
+            
+            curr->next = NULL;
         }
-        return lists[0];
+        return dummy->next;
     }
 };
