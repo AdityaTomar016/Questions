@@ -1,3 +1,42 @@
+class DisjointSet{
+    public: 
+    
+    vector<int>par;
+    vector<int>size;
+
+    DisjointSet(int n){
+        par.resize(n+1);
+        size.resize(n+1,1);
+
+        for(int i=0;i<=n;i++){
+            par[i] = i;
+        }
+    }
+
+    int findpar(int u){
+        if(u == par[u]){
+            return u;
+        }
+
+        return par[u] = findpar(par[u]);
+    }
+
+    void unionbysz(int u,int v){
+        u = findpar(u);
+        v = findpar(v);
+
+        if(u == v) return;
+
+        if(size[u] < size[v]){
+            par[u] = v;
+            size[v] += size[u];
+        }
+        else{
+            par[v] = u;
+            size[u] += size[v]; 
+        }
+    }
+};
 class Solution {
 public:
     
@@ -12,31 +51,26 @@ public:
         
         return (cnt == 2 || cnt == 0);
     }
-    void dfs(int i,vector<string>& strs,vector<int>& vis){
-        vis[i] = 1;
-        
-        for(int j=0;j<strs.size();j++){
-            if(vis[j]) continue;
-            
-            if(similar(strs[i],strs[j])){
-                dfs(j,strs,vis);
-            }
-        }
-    }
     int numSimilarGroups(vector<string>& strs) {
         int n = strs.size();
         
-        vector<int>vis(n,0);
-        int group = 0;
+        DisjointSet d(n);
         
         for(int i=0;i<n;i++){
-            
-            if(vis[i]) continue;
-            
-            group++;
-            dfs(i,strs,vis);
+            for(int j=0;j<n;j++){
+                if(similar(strs[i],strs[j])){
+                    d.unionbysz(i,j);
+                }
+            }
         }
         
-        return group;
+        int groups = 0;
+        for(int i=0;i<n;i++){
+            if(d.par[i] == i){
+                groups++;
+            }
+        }
+        
+        return groups;
     }
 };
