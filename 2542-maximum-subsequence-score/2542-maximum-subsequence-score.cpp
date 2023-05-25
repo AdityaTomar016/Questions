@@ -8,8 +8,8 @@ public:
         }
         
         sort(v.rbegin(),v.rend());
-        
         priority_queue<int,vector<int>,greater<int>>pq;
+        
         long long sum=0,ans=0;
         
         for(int i=0;i<nums1.size();i++){
@@ -22,9 +22,8 @@ public:
             }
             
             if(pq.size() == k){
-                ans = max(ans,sum*v[i].first);
+                ans = max(ans,sum * v[i].first);
             }
-            
         }
         
         return ans;
