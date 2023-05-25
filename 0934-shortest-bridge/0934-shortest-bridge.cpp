@@ -1,73 +1,79 @@
 class Solution {
 public:
+    vector<int>dx = {-1,0,1,0};
+    vector<int>dy = {0,-1,0,1};
     
-    queue<pair<int, int>> q; // queue
-    
-    void dfs(vector<vector<int>>& grid, int i, int j) { // for marking the 1st island visited
-        
-        if (i<0 or i>=grid.size() or j<0 or j>=grid[0].size() or grid[i][j] == 2 or grid[i][j] == 0)
-            return;
-        
-        grid[i][j] = 2; // marking them visited
-        q.push({i,j}); // adding them to queue
-        
-        dfs(grid, i+1, j);
-        dfs(grid, i-1, j);
-        dfs(grid, i, j+1);
-        dfs(grid, i, j-1);
+    queue<pair<int,int>>q;
+    bool isValid(int i,int j,int n,int m,vector<vector<int>>&grid){
+        if(i<0 || j<0 || i>=n || j>=m || grid[i][j] == 2){
+            return false;
+        }
+        return true;
     }
-    
-    int bfs(vector<vector<int>>& grid){ // finding the nearest bridge between visited island and unvisited island
+    int bfs(int n,int m,vector<vector<int>>&grid){
+        int mini = INT_MAX;
+        int dis = 0;
         
-        int d = 0; // dist
-        int mindist = INT_MAX; // to store minimum distance
-        
-        vector<vector<int>> dir = {{1,0}, {0,1}, {-1,0}, {0,-1}};
-        
-        while (!q.empty()){
-            int n = q.size();
+        while(!q.empty()){
+            int sz = q.size();
             
-            while(n-- > 0){
-                auto a = q.front();
+            while(sz--){
+                int x = q.front().first;
+                int y = q.front().second;
+                
                 q.pop();
-
-                for (int h=0; h<4; h++) {
-                    int x = dir[h][0] + a.first;
-                    int y = dir[h][1] + a.second;
+                
+                for(int i=0;i<4;i++){
+                    int row = x + dx[i];
+                    int col = y + dy[i]; 
                     
-                    if (x>=0 and x<grid.size() and y>=0 and y<grid[0].size() and grid[x][y] == 1) { // if the neighbor is 1, then check if its minimum distance
-                        mindist = min(mindist, d);
-                    }
-
-                    else if (x>=0 and x<grid.size() and y>=0 and y<grid[0].size() and grid[x][y] == 0) { // if the neighbor is 0, then mark it visited and add it to queue
-                        q.push({x, y});
-                        grid[x][y] = 2;
+                    if(isValid(row,col,n,m,grid)){
+                        if(grid[row][col] == 1){
+                            mini = min(mini,dis);
+                        }
+                        else{
+                             q.push({row,col});
+                            grid[row][col] = 2;
+                        }
                     }
                 }
             }
-            d++; // increasing each level by distance + 1
+            
+            dis++;
         }
-        
-        return mindist; // returning min dist found till end
+        return mini;
     }
-    
+    void dfs(int i,int j,int n,int m,vector<vector<int>>&grid){
+        if(i<0 || j<0 || i>=n || j>=m || grid[i][j] != 1){
+            return;
+        }
+        grid[i][j] = 2;
+        q.push({i,j});
+        
+        for(int it=0;it<4;it++){
+            int row = i + dx[it];
+            int col = j + dy[it];
+            
+            dfs(row,col,n,m,grid);
+        }
+    }
     int shortestBridge(vector<vector<int>>& grid) {
+        int n=grid.size();
+        int m=grid[0].size();
         
         bool flag = false;
         
         for (int i=0; i<grid.size(); i++){
             for (int j=0; j<grid[0].size(); j++){
-                if (grid[i][j] == 1 and !flag){ // found 1st '1' in the matrix
-                    dfs(grid, i, j); // dfs for marking the whole island visited
-                    q.push({i,j});
+                if (grid[i][j] == 1){ 
+                    dfs(i,j,n,m,grid);
                     flag = true;
                     break;
                 }
             }
-            if (flag)
-                break;
+            
+            if(flag) break;
         }
-        
-        return bfs(grid); // bfs for getting min dist and returning it
+        return bfs(n,m,grid);
     }
 };
