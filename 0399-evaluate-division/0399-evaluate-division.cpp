@@ -1,73 +1,72 @@
 class Solution {
 public:
-void dfs(string start,string end,unordered_map<string,double>mp,
-             unordered_map<string,vector<string>>graph,double &val,                map<string,int>&vis,bool &found){
+    void dfs(string start,string end,double &value,unordered_map<string,vector<string>>mp,unordered_map<string,double>val,map<string,bool>vis,bool &found){
         
-        vis[start]=1;
-        
+        vis[start] = true;
         if(found) return;
         
-        for(auto child: graph[start]){
-            
-            if(!vis[child]){
-                
-            val *= mp[start + "->" + child];
-            
-            if(child==end){ 
-                found=true;
-                return;
-            }
-            
-            dfs(child,end,mp,graph,val,vis,found);
-            
-            if(found) return;
-            else
-                val /= mp[start +  "->" + child];
-        }
-        }
         
+        
+        for(auto child: mp[start]){
+            if(!vis[child]){
+                value *= val[start + "->" + child];
+                
+                if(child == end){
+                    found = true;
+                    return;
+                }
+                
+                dfs(child,end,value,mp,val,vis,found);
+                
+                if(found) return;
+                else{
+                    value /= val[start + "->" + child];
+                }
+            }
+        }
     }
     vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
-        
-        unordered_map<string,double>mp;
-        unordered_map<string,vector<string>>graph;
-        
+        unordered_map<string,double>val;
+        unordered_map<string,vector<string>>mp;
         vector<double>ans;
         
         for(int i=0;i<equations.size();i++){
             string start = equations[i][0];
             string end = equations[i][1];
             
-            graph[start].push_back(end);
-            graph[end].push_back(start);
+            mp[start].push_back(end);
+            mp[end].push_back(start);
             
-            mp[start + "->" + end] = values[i];
-            mp[end + "->" + start] = 1/values[i];
+            val[start + "->" + end] = values[i];
+            val[end + "->" + start] = 1/values[i];
         }
         
         for(int i=0;i<queries.size();i++){
-            
             string start = queries[i][0];
             string end = queries[i][1];
             
-            if(graph.find(start)==graph.end() ||                                    graph.find(end)==graph.end()){
+            if(mp.find(start) == mp.end() || mp.find(end) == mp.end()){
                 ans.push_back(-1);
             }
             else{
-                map<string,int>vis;
-                bool found = false;
-                double val = 1;
+                map<string,bool>vis;
                 
-                if(start==end){
+                bool found = false;
+                double value = 1;
+                
+                if(start == end){
                     found = true;
                 }
                 else{
-                    dfs(start,end,mp,graph,val,vis,found);
+                    dfs(start,end,value,mp,val,vis,found);
                 }
+                
                 if(found){
-                    ans.push_back(val);
+                    ans.push_back(value);
                 }
-                else ans.push_back(-1);
+                else{
+                    ans.push_back(-1);
+                }
             }
         }
         return ans;
