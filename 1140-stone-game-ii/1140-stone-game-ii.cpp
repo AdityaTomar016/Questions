@@ -1,33 +1,28 @@
 class Solution {
 public:
-    int rec(vector<int> &piles, int idx, int M, int noOfPiles, int turn, vector<vector<vector<int> > > &dp){
-        if(idx >= noOfPiles) return 0;
-        if(dp[idx][M][turn] != -1){
-            return dp[idx][M][turn];
+    int solve(int i,int M,vector<int>&piles,vector<vector<int>>&dp){
+        if(i >= piles.size()){
+            return 0;
         }
-        int alexGotStones;
-        if(turn){
-            alexGotStones = INT_MAX;
-            for(int i = 0; i < 2 * M; i++){
-                if(!(idx + i < noOfPiles)) break;
-                alexGotStones = min(alexGotStones, rec(piles, idx + i + 1, max(i + 1, M), noOfPiles, 0, dp));          
-            } 
-        }else{
-            alexGotStones = 0;
-            int tempSum = 0;
-            for(int i = 0; i < 2 * M; i++){
-                if(!(idx + i < noOfPiles)) break;
-                tempSum += piles[idx + i];
-                alexGotStones = max(alexGotStones, tempSum + rec(piles, idx + i + 1, max(i + 1, M), noOfPiles, 1, dp));          
-            }
+        
+        if(dp[i][M] != -1){
+            return dp[i][M];
         }
-        dp[idx][M][turn] = alexGotStones;
-        return alexGotStones;
+        int total=0;
+        int ans = INT_MIN;
+        
+        for(int j=0;j<2*M;j++){
+            if(i+j < piles.size()) total += piles[i+j];
+            ans = max(ans, total-solve(i+j+1,max(j+1,M),piles,dp));
+        }
+        return dp[i][M] = ans;
     }
-    
     int stoneGameII(vector<int>& piles) {
-        vector<vector<vector<int> > > dp(105, vector<vector<int> > (105, vector<int> (2, -1)));
-        int noOfPiles = piles.size();
-        return rec(piles, 0, 1, noOfPiles, 0, dp);
+        int sum=0;
+        for(auto i: piles){
+            sum += i;
+        }
+        vector<vector<int>>dp(piles.size(),vector<int>(1e4+1,-1));
+        return (solve(0,1,piles,dp) + sum)/2;
     }
 };
