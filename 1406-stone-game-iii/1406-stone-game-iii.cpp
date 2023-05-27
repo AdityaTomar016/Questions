@@ -20,10 +20,27 @@ public:
         
         return dp[i] = ans;
     }
-    string stoneGameIII(vector<int>& stoneValue) {
+    string stoneGameIII(vector<int>& s) {
         
-        vector<int>dp(stoneValue.size(),-1);
-        int ans = solve(0,stoneValue,dp);
+        int n = s.size();
+        vector<int>dp(n+1,0);
+        
+        for(int i=n-1;i>=0;i--){
+            
+            int ans=INT_MIN;
+    
+            ans = max(ans,s[i] - dp[i+1]);
+
+            if(i+1 < s.size()){
+                ans = max(ans,s[i] + s[i+1] - dp[i+2]);
+            }
+            if(i+2 < s.size()){
+                ans = max(ans,s[i] + s[i+1] + s[i+2] - dp[i+3]);
+            }
+
+            dp[i] = ans;
+        }
+        int ans = dp[0];
         
         if(ans > 0){
             return "Alice";
