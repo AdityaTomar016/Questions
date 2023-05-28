@@ -3,22 +3,23 @@ public:
     
     int nthUglyNumber(int n) {
         
-        priority_queue<long long,vector<long long>,greater<long long>>pq;
-        pq.push(1);
+       vector<int>dp(n+1);
+        dp[0] = 1;
         
-        for(int i=0;i<n-1;i++){
-            long long x = pq.top();
-            pq.pop();
+        int p2=0,p3=0,p5=0;
+        
+        for(int i=1;i<=n;i++){
+            int f2 = 2 * dp[p2];
+            int f3 = 3 * dp[p3];
+            int f5 = 5 * dp[p5];
             
-            while(!pq.empty() && pq.top() == x){
-                pq.pop();
-            }
+            dp[i] = min({f2,f3,f5});
             
-            pq.push(x*2);
-            pq.push(x*3);
-            pq.push(x*5);
+            if(dp[i] == f2) p2++;
+            if(dp[i] == f3) p3++;
+            if(dp[i] == f5) p5++;
         }
         
-        return pq.top();
+        return dp[n-1];
     }
 };
