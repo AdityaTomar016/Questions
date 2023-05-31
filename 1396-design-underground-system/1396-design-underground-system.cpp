@@ -1,6 +1,6 @@
 class UndergroundSystem {
 public:
-    map<pair<string,string>,vector<int>>timing;
+    map<pair<string,string>,pair<int,int>>timing;
     unordered_map<int,pair<string,int>>travel;
     
     UndergroundSystem() {
@@ -13,16 +13,18 @@ public:
     
     void checkOut(int id, string stationName, int t) {
         int diff = t-travel[id].second;
-        timing[{travel[id].first,stationName}].push_back(diff);
+        timing[{travel[id].first,stationName}].first += diff;
+        timing[{travel[id].first,stationName}].second++;
     }
     
     double getAverageTime(string startStation, string endStation) {
-        int sum=0;
-        for(auto i: timing[{startStation,endStation}]){
-            sum += i;
-        }
+//         int sum=0;
+//         for(auto i: timing[{startStation,endStation}]){
+//             sum += i;
+//         }
         
-        return (double)sum/(timing[{startStation,endStation}].size());
+//         return (double)sum/(timing[{startStation,endStation}].size());
+        return (double)timing[{startStation,endStation}].first/timing[{startStation,endStation}].second;
     }
 };
 
