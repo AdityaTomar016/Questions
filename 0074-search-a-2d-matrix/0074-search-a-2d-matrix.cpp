@@ -4,26 +4,17 @@ public:
         int n = matrix.size();
         int m = matrix[0].size();
         
-        for(int i=0;i<n;i++){
-            int l = 0,r = m-1;
+        int low = 0,high = m-1;
+        
+        while(low < n && high >= 0){
+            int curr = matrix[low][high];
             
-            if(target >= matrix[i][l] && target <= matrix[i][r]){
-                while(l<=r){
-                    int mid = (l+r)/2;
-                    
-                    if(l == r && matrix[i][l] != target) break;
-                    if(matrix[i][mid] == target){
-                        return true;
-                    }
-                    else if(target > matrix[i][mid]){
-                        l = mid+1;
-                    }
-                    else {
-                        r = mid;
-                    }
-                }
-            }
+            if(curr == target) return true;
+            
+            if(target > curr) low++;
+            else high--;
         }
+        
         return false;
     }
 };
