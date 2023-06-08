@@ -5,10 +5,14 @@ public:
         int m = grid[0].size();
         
         int ans = 0;
+        int r=0,c=m-1;
         
-        for(int i=0;i<n;i++){
-            ans += upper_bound(grid[i].rbegin(),grid[i].rend(),-1) - grid[i].rbegin();
+        while(r < n){
+            while(c >= 0 && grid[r][c] < 0) c--;
+            ans += m-c-1;
+            r++;
         }
+        
         return ans;
     }
 };
