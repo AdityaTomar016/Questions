@@ -6,14 +6,14 @@ public:
         int n = s.size();
         int i=0,j=0;
         
-        unordered_set<char>st;
+        unordered_map<char,int>mp;
         
         while(j<n){
-            while(st.find(s[j]) != st.end()){
-                st.erase(s[i]);
-                i++;
+            if(mp.find(s[j]) != mp.end()){
+                i = max(mp[s[j]]+1,i);
             }
-            st.insert(s[j]);
+            
+            mp[s[j]] = j;
             j++;
             maxi = max(maxi,j-i);
             
