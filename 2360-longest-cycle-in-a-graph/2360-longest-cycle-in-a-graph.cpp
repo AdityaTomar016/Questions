@@ -1,38 +1,50 @@
-class Solution
-{
+class Solution {
 public:
-    int mx;
-    void dfs(int node, vector<int> &edges, vector<int> &distance_from_start_node, vector<int> &visited, int current_len)
-    {
-        if (!visited[node]) {
-            // adding the current node to the path form start node
-            visited[node] = 1;
-            distance_from_start_node[node] = current_len;
-
-            if (edges[node] != -1) {
-                dfs(edges[node], edges, distance_from_start_node, visited, current_len + 1);
+    void dfs(int node,int dis,vector<int>adj[],vector<int>&vis,vector<int>&pathvis,vector<int>&distance,int &ans){
+        
+        vis[node] = 1;
+        pathvis[node] = 1;
+        
+        for(auto it: adj[node]){
+            if(!vis[it]){
+                dis++;
+                distance[it] = dis;
+                dfs(it,dis,adj,vis,pathvis,distance,ans);
+            }
+            else if(pathvis[it]){
+                ans = max(ans,dis-distance[it]+1);
+                break;
+            }
+        }
+        
+        pathvis[node] = 0;
+    }
+    int longestCycle(vector<int>& edges) {
+        int n = edges.size();
+        vector<int>adj[n];
+        
+        vector<int>vis(n,0);
+        vector<int>pathvis(n,0);
+        vector<int>dis(n,0);
+        
+        
+        for(int i=0;i<n;i++){
+            if(edges[i] == -1) continue;
+            
+            adj[i].push_back(edges[i]);
+        }
+        
+        int ans = INT_MIN;
+        
+        for(int i=0;i<n;i++){
+            if(!vis[i]){
+                dfs(i,0,adj,vis,pathvis,dis,ans);
             }
             
-            // backtracking step - removing the current node from the path
-            distance_from_start_node[node] = -1;
         }
-        else {
-            // checking if the current node makes a cycle or not
-            if (distance_from_start_node[node] != -1) {
-                // if it makes a cycle, then consider the number of nodes in the cycle
-                mx = max(current_len - distance_from_start_node[node], mx);
-            }
-        }
-    }
-    int longestCycle(vector<int> &edges)
-    {
-        mx = -1;
-        vector<int> visited(edges.size(), 0), length(edges.size(), -1);
-        for (int i = 0; i < edges.size(); ++i) {
-            if (!visited[i]) {
-                dfs(i, edges, length, visited, 0);
-            }
-        }
-        return mx;
+        
+        if(ans == INT_MIN) return -1;
+        
+        return ans;
     }
 };
