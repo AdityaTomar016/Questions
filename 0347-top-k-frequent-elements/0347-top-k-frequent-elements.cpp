@@ -1,31 +1,31 @@
-class comp{
-  public:
-    bool operator()(pair<int,int> &a, pair<int,int>&b){
-        return a.second > b.second;
-    }
-};
 class Solution {
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
+        
+        if(nums.size() == 0) return {};
+        
         unordered_map<int,int>mp;
         
         for(auto i: nums){
             mp[i]++;
         }
         
-        vector<pair<int,int>>v;
+        vector<vector<int>>bucket(nums.size()+1);
+        
         for(auto i: mp){
-            v.push_back(i);
+            bucket[i.second].push_back(i.first);
         }
         
-        sort(v.begin(),v.end(),comp());
+        vector<int>res;
         
-        vector<int>ans;
-        
-        for(int i=0;i<k;i++){
-            ans.push_back(v[i].first);
+        for(int i=bucket.size()-1;i>=0;i--){
+            for(int j=0;j<bucket[i].size();j++){
+                res.push_back(bucket[i][j]);
+                
+                if(res.size() == k) return res;
+            }
         }
         
-        return ans;
+        return res;
     }
 };
