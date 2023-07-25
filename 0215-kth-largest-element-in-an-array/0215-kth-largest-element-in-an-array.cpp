@@ -22,24 +22,23 @@ int partition(vector<int>& arr, int left, int right) {
 }
 
     int findKthLargest(vector<int>& nums, int k) {
-        
         int left = 0, right = nums.size()-1;
         
         while(true){
-            
             int idx = partition(nums,left,right);
             
             if(idx == k-1){
                 return nums[idx];
             }
             
-            if(idx < k-1){
-                left = idx+1;
-            }
-            else{
+            if(idx >= k-1){
                 right = idx-1;
             }
+            else{
+                left = idx+1;
+            }
         }
+        
         return -1;
     }
 };
