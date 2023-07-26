@@ -14,33 +14,33 @@ class Solution {
     */
     vector<int> bellman_ford(int V, vector<vector<int>>& edges, int S) {
         
-        vector<int>dist(V,1e8);
-        dist[S]=0;
+        vector<int>distance(V,1e8);
+        distance[S] = 0;
         
         for(int i=0;i<V-1;i++){
-            
-            for(auto edge: edges){
-                int node = edge[0];
-                int nextnode = edge[1];
-                int wt = edge[2];
-                
-                if(dist[nextnode] > wt + dist[node]){
-                    dist[nextnode] = wt + dist[node];
-                }
+            for(auto it: edges){
+                 int u = it[0];
+                 int v = it[1];
+                 int wt = it[2];
+                 
+                 if(distance[u] != INT_MAX && distance[v] > distance[u] + wt){
+                     distance[v] = distance[u] + wt;
+                 }
             }
         }
         
-        for(auto edge: edges){
-                int node = edge[0];
-                int nextnode = edge[1];
-                int wt = edge[2];
-                
-                if(dist[nextnode] > wt + dist[node]){
-                   return {-1};
-                }
+        
+        for(auto it: edges){
+                 int u = it[0];
+                 int v = it[1];
+                 int wt = it[2];
+                 
+                 if(distance[u] != INT_MAX && distance[v] > distance[u] + wt){
+                     return {-1};
+                 }
             }
             
-        return dist;
+            return distance;
     }
 };
 
