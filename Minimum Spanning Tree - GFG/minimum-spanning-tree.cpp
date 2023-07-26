@@ -3,51 +3,75 @@
 using namespace std;
 
 // } Driver Code Ends
+
+
+class DisjointSet{
+  public:
+  vector<int>par,rank;
+  
+  DisjointSet(int n){
+      par.resize(n+1);
+      rank.resize(n+1,0);
+      
+      for(int i=0;i<=n;i++){
+          par[i] = i;
+      }
+  }
+  int find_par(int u){
+      if(u == par[u]){
+          return par[u];
+      }
+      return par[u] = find_par(par[u]);
+  }
+  
+  void unionbyrank(int u,int v){
+      u = find_par(u);
+      v = find_par(v);
+      
+      if(u == v) return;
+      else if(rank[u] < rank[v]){
+          par[u] = v;
+      }
+      else if(rank[v] < rank[u]){
+          par[v] = u;
+      }
+      else{
+          par[v] = u;
+          rank[u]++;
+      }
+  }
+  
+};
 class Solution
 {
 	public:
 	//Function to find sum of weights of edges of the Minimum Spanning Tree.
     int spanningTree(int V, vector<vector<int>> adj[])
     {
-        
-        // vector<pair<int,int>> adj[V+1];
-        
-        // for(int i=0;i<V;i++){
-        //     for(auto it: edge[i]){
-        //         int u = it[0];
-        //         int v = it[1];
-        //         int wt = it[2];
+        vector<pair<int,pair<int,int>>>edges;
+        for(int i=0;i<V;i++){
+            for(auto it: adj[i]){
+                int u = i;
+                int v = it[0];
+                int wt = it[1];
                 
-        //         adj[u].push_back({v,wt});
-        //         adj[v].push_back({u,wt});
-        //     }
-        // }
+                edges.push_back({wt,{u,v}});
+            }
+        }
         
-        vector<int>vis(V+1,0);
-        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
-        pq.push({0,0});
+        sort(edges.begin(),edges.end());
         
+        DisjointSet ds(V);
         int sum=0;
         
-        while(!pq.empty()){
-            auto x = pq.top();
-            pq.pop();
+        for(auto i: edges){
+            int u = i.second.first;
+            int v = i.second.second;
+            int wt = i.first;
             
-            int node = x.second;
-            int wt = x.first;
-            
-            if(vis[node] == 1) continue;
-            
-            vis[node] = 1;
-            sum += wt;
-            
-            for(auto it: adj[node]){
-                int v = it[0];
-                int dis = it[1];
-                
-                if(!vis[v]){
-                    pq.push({dis,v});
-                }
+            if(ds.find_par(u) != ds.find_par(v)){
+                ds.unionbyrank(u,v);
+                sum += wt;
             }
         }
         
