@@ -27,8 +27,21 @@ class Solution{
 	}
 	int maxSumIS(int arr[], int n)  
 	{  
-	    vector<vector<int>>dp(n,vector<int>(n+1,-1));
-	    return solve(0,-1,arr,n,dp);
+	    vector<vector<int>>dp(n+1,vector<int>(n+1,0));
+	    
+	    for(int i=n-1;i>=0;i--){
+	        for(int j=i-1;j>=-1;j--){
+	            int take=0,nottake=0;
+        	    if(j == -1 || arr[i] > arr[j]){
+        	        take = arr[i] + dp[i+1][i+1];
+        	    }
+        	    nottake = dp[i+1][j+1];
+        	    
+        	    
+        	    dp[i][j+1] = max(take,nottake);
+	        }
+	    }
+	    return dp[0][0];
 	}  
 };
 
