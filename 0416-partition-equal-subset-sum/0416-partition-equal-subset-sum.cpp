@@ -31,7 +31,30 @@ public:
         
         if(sum%2) return false;
         
-        vector<vector<int>>dp(n,vector<int>(sum/2 + 1,-1));
-        return solve(0,nums,sum/2,dp);
+        int target = sum/2;
+        vector<vector<int>>dp(n,vector<int>(target + 1,0));
+        
+        for(int i=0;i<n;i++){
+            dp[i][0] = 1;
+        }
+        for(int t=1;t<=target;t++){
+            dp[n-1][t] = (t==nums[n-1]);
+        }
+        
+        for(int i=n-2;i>=0;i--){
+            for(int t=1;t<=target;t++){
+                
+                bool take=false, nottake = false;
+        
+                if(t >= nums[i]){
+                    take = take || dp[i+1][t-nums[i]];
+                }
+
+                nottake = dp[i+1][t];
+
+                dp[i][t] = (take || nottake);
+            }
+        }
+        return dp[0][target];
     }
 };
