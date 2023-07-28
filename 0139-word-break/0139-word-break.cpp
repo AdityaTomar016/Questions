@@ -35,8 +35,31 @@ public:
         }
         int n = s.size();
         
-        vector<vector<int>>dp(n,vector<int>(n,-1));
+        vector<vector<int>>dp(n+1,vector<int>(n+1,0));
         
-        return solve(0,0,s,set,dp);
+        dp[n][n] = 1;
+        
+        for(int i=0;i<n;i++){
+            string word = s.substr(i);
+            if(set.find(word) != set.end()){
+                dp[n][i] = 1;
+            }
+        }
+        
+        for(int i=n-1;i>=0;i--){
+            for(int j=i;j>=0;j--){
+                string word = s.substr(j, i-j+1);
+
+                bool take = false, nottake = false;
+
+                if(set.find(word) != set.end()){
+                    take = take || dp[i+1][i+1];
+                }
+                nottake = dp[i+1][j];
+
+                dp[i][j] = (take || nottake);
+            }
+        }
+        return dp[0][0];
     }
 };
