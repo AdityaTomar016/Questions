@@ -1,44 +1,49 @@
 class Solution {
 public:
-    vector<vector<int>> dp; // we will store all our answers here and then get values for all future references
-    
-    int dead_end_sum(string &s , int i) // one of the string id empty , so all ASCII sums from ith character till end of string
-    {
-        int sum = 0;
-        for( ; i<s.length() ; i++)
-            sum+=int(s[i]);
+    vector<vector<int>>dp;
+    int lastsum(string &s,int i){
+        int sum=0;
+        while(i < s.size()){
+            sum += int(s[i]);
+            i++;
+        }
         return sum;
     }
-    
-    int sub(string &a, string &b, int i, int j) // sub problem
-    {
-        int n = a.length();
-        int m = b.length();
-        int sum = 0;
-        if(i==n || j==m)
-        {
-            if(i==n and j==m)   return 0;
-            return (i==n) ? dead_end_sum(b,j) : dead_end_sum(a,i);
+    int solve(int i,int j,string &s1,string &s2){
+        
+        if(i == s1.size() || j == s2.size()){
+            if(i == s1.size() && j == s2.size()){
+                return 0;
+            }
+            if(i == s1.size()){
+                return lastsum(s2,j);
+            }
+            else{
+                return lastsum(s1,i);
+            }
         }
         
-        if(dp[i][j] != -1)            return dp[i][j];      // we know the answer so no need to recompute , reture it as it is.
-    
-        if(a[i] == b[j])
-            sum = sub(a,b,i+1,j+1);
-        else
-        {
-            sum = min({ sub(a,b,i+1,j) + int(a[i]) ,                // option  1
-                        sub(a,b,i,j+1) + int(b[j])});              // option 2
-        }      
-        dp[i][j] = sum;     // we store our answer at each step
-        return sum;
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        
+        int sum = 0;
+        
+        if(s1[i] == s2[j]){
+            sum = 0 + solve(i+1,j+1,s1,s2);    
+        }
+        else{
+            sum = min(int(s1[i]) + solve(i+1,j,s1,s2), 
+                      int(s2[j]) + solve(i,j+1,s1,s2));
+        }
+        
+        return dp[i][j] = sum;
     }
-    int minimumDeleteSum(string a, string b) {
+    int minimumDeleteSum(string s1, string s2) {
+        int n = s1.size();
+        int m = s2.size();
         
-        // making of DP matrix to store result and initilizing it to -1
-        dp = vector<vector<int>>(a.length()+1, vector<int>(b.length()+1 , -1));
-        return sub(a,b,0,0);
-        
-        return 0;
+        dp.resize(n,vector<int>(m,-1));
+       return solve(0,0,s1,s2);
     }
 };
