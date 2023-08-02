@@ -1,45 +1,39 @@
 class Solution {
 public:
     vector<int> majorityElement(vector<int>& nums) {
-        int n = nums.size();
+        int cnt1=0,cnt2=0,maj1 = 1e9+1,maj2 = 1e9+1;
         
-        int count1=0,count2=0,element1 = 1e9+1,element2 = 1e9+1;
-        
-        for(int i=0;i<n;i++){
-            if(count1 == 0 && nums[i] != element2){
-                count1 = 1;
-                element1 = nums[i];
+        for(int i=0;i<nums.size();i++){
+            if(cnt1 == 0 && nums[i] != maj2){
+                maj1 = nums[i];
+                cnt1 = 1;
             }
-            else if(count2 == 0 && nums[i] != element1){
-                count2 = 1;
-                element2 = nums[i];
+            else if(cnt2 == 0 && nums[i] != maj1){
+                maj2 = nums[i];
+                cnt2 = 1;
             }
-            else if(nums[i] == element1){
-                count1++;
-            }
-            else if(nums[i] == element2){
-                count2++;
-            }
+            else if(maj1 == nums[i]) cnt1++;
+            else if(maj2 == nums[i]) cnt2++;
             else{
-                count1--;
-                count2--;
+                cnt1--;
+                cnt2--;
             }
         }
+        
         vector<int>ans;
-        count1 = 0,count2 = 0;
+        cnt1 = 0, cnt2 = 0;
         
-        for(int i=0;i<n;i++){
-            if(element1 == nums[i]) count1++;
-            if(element2 == nums[i]) count2++;
+        for(int i=0;i<nums.size();i++){
+            if(nums[i] == maj1) cnt1++;
+            if(nums[i] == maj2) cnt2++;
         }
         
-        if(count1 > n/3){
-            ans.push_back(element1);
+        if(cnt1 > nums.size()/3){
+            ans.push_back(maj1);
         }
-        if(count2 > n/3){
-            ans.push_back(element2);
+        if(cnt2 > nums.size()/3){
+            ans.push_back(maj2);
         }
-        
         return ans;
     }
 };
