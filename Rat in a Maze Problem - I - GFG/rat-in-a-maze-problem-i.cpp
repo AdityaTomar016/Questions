@@ -10,32 +10,29 @@ using namespace std;
 
 class Solution{
     public:
-    void solve(int i,int j,string s,vector<string>&ans,vector<vector<int>> &m, int n){
+    void solve(int i,int j,int n,vector<vector<int>> &mat,string s,vector<string> &ans){
+        if(i<0 || j<0 || i>=n || j>=n || mat[i][j] == 0 || mat[i][j] == 2){
+            return;
+        }
         if(i == n-1 && j == n-1){
             ans.push_back(s);
             return;
         }
         
-        if(i<0 || j<0 || i>=n || j>=n || m[i][j] != 1){
-            return;
-        }
-        int temp = m[i][j];
-        m[i][j] = 2;
+        mat[i][j] = 2;
         
-        solve(i+1,j,s+"D",ans,m,n);
-        solve(i,j+1,s+"R",ans,m,n);
-        solve(i-1,j,s+"U",ans,m,n);
-        solve(i,j-1,s+"L",ans,m,n);
+        solve(i+1,j,n,mat,s+'D',ans);
+        solve(i-1,j,n,mat,s+'U',ans);
+        solve(i,j+1,n,mat,s+'R',ans);
+        solve(i,j-1,n,mat,s+'L',ans);
         
-        
-        m[i][j] = temp;
+        mat[i][j] = 1;
     }
-    vector<string> findPath(vector<vector<int>> &m, int n) {
-        string s="";
+    vector<string> findPath(vector<vector<int>> &mat, int n) {
         vector<string>ans;
+        string s = "";
         
-        if(m[0][0] == 0 || m[n-1][n-1] == 0) return {};
-        solve(0,0,s,ans,m,n);
+        solve(0,0,n,mat,s,ans);
         return ans;
     }
 };
