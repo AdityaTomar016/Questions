@@ -28,7 +28,29 @@ public:
     }
     int change(int amount, vector<int>& coins) {
         int n = coins.size();
-        vector<vector<int>> dp(n,vector<int>(amount+1,-1));
-        return solve(0,amount,coins,dp);
+        vector<vector<int>> dp(n+1,vector<int>(amount+1,0));
+        
+        for(int am=0;am<=amount;am++){
+            dp[n-1][am] = am%coins[n-1] == 0 ? 1 : 0;
+        }
+        for(int i=0;i<=n;i++){
+            dp[i][0] = 1;
+        }
+        
+        for(int i=n-1;i>=0;i--){
+            for(int am=0;am<=amount;am++){
+                int take = 0, nottake = 0;
+        
+                if(coins[i] <= am){
+                    take = dp[i][am-coins[i]];
+                }
+
+                nottake = dp[i+1][am]; 
+
+                dp[i][am] = take+nottake;
+            }
+        }
+        
+        return dp[0][amount]; 
     }
 };
