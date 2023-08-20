@@ -1,20 +1,21 @@
 class Solution {
 public:
     vector<int>temp;
-    bool find(int i,vector<vector<int>>& offers,int n){
-        int low = i+1, high = temp.size()-1;
+    int find(int target){
+        int low = 0, high = temp.size(),next = temp.size();
         
         while(low < high){
             int mid = (low+high)/2;
             
-            if(temp[mid] <= offers[i][1]){
+            if(temp[mid] <= target){
                 low = mid+1;
             }
             else{
+                
                 high = mid;
             }
         }
-        return low;
+        return high;
     }
     int solve(int i,vector<vector<int>>& offers,vector<int>&dp,int n){
         if(i >= offers.size()){
@@ -25,7 +26,7 @@ public:
         }
         int take=0,nottake=0;
         
-        int next = upper_bound(temp.begin(),temp.end(),offers[i][1]) - temp.begin();
+        int next = find(offers[i][1]);
         
         take = offers[i][2] + solve(next,offers,dp,n);
         nottake = solve(i+1,offers,dp,n);
