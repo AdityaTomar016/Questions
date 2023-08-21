@@ -27,14 +27,25 @@ public:
         
         vector<vector<int>>dp(n+1,vector<int>(n+1,-1));
         
-        for(int i=0;i<n;i++){
+        for(int i=n-1;i>=0;i--){
             for(int j=i;j<n;j++){
                 
-                if(s[i] == s[j] && ispal(i+1,j-1,s,dp)){
-                    if(j-i+1 > maxi){
-                        maxi = j-i+1;
-                        res = s.substr(i,j-i+1);
+                bool flag = false;
+                
+                if(s[i] == s[j]){
+                    if(j-i <= 2){
+                        flag = true;
                     }
+                    else{
+                        flag = flag || dp[i+1][j-1];
+                    }
+                }
+                dp[i][j] = flag;
+                
+                
+                if(dp[i][j] && maxi < j-i+1){
+                    maxi = j-i+1;
+                    res = s.substr(i,j-i+1);
                 }
             }
         }
