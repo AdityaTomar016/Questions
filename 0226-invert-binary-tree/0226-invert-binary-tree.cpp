@@ -12,14 +12,17 @@
 class Solution {
 public:
     
-    TreeNode* invertTree(TreeNode* root) {
-        if(root == NULL){
-            return NULL;
+    void solve(TreeNode* root){
+        if(!root){
+            return;
         }
-        TreeNode* curr = new TreeNode(root->val);
-        curr->left = invertTree(root->right);
-        curr->right = invertTree(root->left);
+        solve(root->left);
+        solve(root->right);
         
-        return curr;
+        swap(root->left,root->right);
+    }
+    TreeNode* invertTree(TreeNode* root) {
+        solve(root);
+        return root;
     }
 };
