@@ -11,23 +11,23 @@
  */
 class Solution {
 public:
-    bool isSameTree(TreeNode* p,TreeNode* q){
-        if(!p && !q) return true;
-        if(!p || !q) return false;
-        
-        bool sameNode = (p->val == q->val);
-        
-        return sameNode && isSameTree(p->left,q->left) && isSameTree(p->right,q->right);
-    }
-    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
-        
-        if(!root){
+    bool isSame(TreeNode*p , TreeNode* q){
+        if(!p && !q){
+            return true;
+        }
+        if(!p || !q){
             return false;
         }
         
+        return (p->val == q->val) && isSame(p->left,q->left) && isSame(p->right,q->right);
+    }
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) { 
+        if(!root){
+            return false;
+        }
         bool left = isSubtree(root->left,subRoot);
         bool right = isSubtree(root->right,subRoot);
         
-        return (root->val == subRoot->val && isSameTree(root,subRoot)) || left || right;
+        return (root->val == subRoot->val && isSame(root,subRoot)) || left || right;
     }
 };
