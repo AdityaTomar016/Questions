@@ -7,82 +7,42 @@ class Solution
 {
     public:
     //Function to find out minimum steps Knight needs to reach target position.
-    
-    // void solve(int i,int j,int n,int m,int N,int steps,int &ans,vector<vector<int>>&vis){
-    //     if(i<0 || j<0 || i>=N || j>=N || vis[i][j] == 1){
-    //         return;
-    //     }
-    //     if(i==n && j==m){
-    //         ans = min(ans,steps);
-    //     }
-        
-    //     vis[i][j] = 1;
-        
-    //     solve(i+2,j-1,n,m,N,steps+1,ans,vis);
-    //     solve(i+2,j+1,n,m,N,steps+1,ans,vis);
-    //     solve(i-2,j-1,n,m,N,steps+1,ans,vis);
-    //     solve(i-2,j+1,n,m,N,steps+1,ans,vis);
-    //     solve(i+1,j+2,n,m,N,steps+1,ans,vis);
-    //     solve(i+1,j-2,n,m,N,steps+1,ans,vis);
-    //     solve(i-1,j-2,n,m,N,steps+1,ans,vis);
-    //     solve(i-1,j+2,n,m,N,steps+1,ans,vis);
-        
-    //     vis[i][j] = 0;
-        
-    // }
-    
-    bool isValid(int i,int j,int N){
-          if(i<0 || j<0 || i>=N || j>=N){
-            return false;
-         }
-         
-         return true;
-    }
 	int minStepToReachTarget(vector<int>&KnightPos,vector<int>&TargetPos,int N)
 	{
-	    
+	    vector<pair<int,int>>dir = {{-1,2},{-1,-2},{-2,-1},{-2,1},{2,-1},{2,1},{1,-2},{1,2}};
 	    vector<vector<int>>vis(N+1,vector<int>(N+1,0));
 	    
+	    queue<pair<int,int>>q;
+	    q.push({KnightPos[0],KnightPos[1]});
+	    vis[KnightPos[0]][KnightPos[1]] = 1;
+	    
 	    int steps=0;
-	    int ans=INT_MAX;
-	    
-	    vector<pair<int,int>>dir={ {-1,2},{-1,-2},{-2,-1},{-2,1},{2,-1},{2,1},{1,-2},{1,2} };
-
-	    int n = TargetPos[0];
-	    int m = TargetPos[1];
-	    
-	    int i = KnightPos[0];
-	    int j = KnightPos[1];
-	    
-	    if(i==n && j==m){
-	        return 0;
-	    }
-	    
-	    queue<vector<int>>q;
-	    q.push({i,j,0});
 	    
 	    while(!q.empty()){
-	        auto x = q.front();
-	        q.pop();
-	        
-	        int row = x[0];
-	        int col = x[1];
-	        int steps = x[2];
-	        
-	        for(auto it: dir){
-	            int newr = row + it.first;
-	            int newc = col + it.second;
+	        int sz=q.size();
+	        while(sz--){
+	            int i = q.front().first;
+	            int j = q.front().second;
+	            q.pop();
 	            
-	            if(newr == n && newc == m){
-	                return steps+1;
+	            if(i == TargetPos[0] && j == TargetPos[1]){
+	                return steps;
 	            }
-	            if(isValid(newr,newc,N) && vis[newr][newc]==0){
-	                q.push({newr,newc,steps+1});
-	                vis[newr][newc] = 1;
+	            
+	            for(auto dr: dir){
+	                int x = i + dr.first;
+	                int y = j + dr.second;
+	                
+	                if(x>=1 && y>=1 && x<=N && y<=N && !vis[x][y]){
+	                    q.push({x,y});
+	                    vis[x][y] = 1;
+	                }
+	                
 	            }
 	        }
+	        steps++;
 	    }
-
+	    
 	    return -1;
 	}
 };
