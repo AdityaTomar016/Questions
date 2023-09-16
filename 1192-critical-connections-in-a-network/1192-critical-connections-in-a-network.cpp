@@ -1,30 +1,32 @@
 class Solution {
 public:
-    set<pair<int,int>>set;
     
-    int dfs(int i,int k,vector<int>&rank,vector<vector<int>>&ans,vector<int>adj[]){
+    int timer = 0;
+    
+    void dfs(int i,int par, vector<int>&vis,vector<int>&tin,vector<int>&low,vector<vector<int>>&ans,vector<int>adj[]){
         
-        if(rank[i] >= 0){
-            return rank[i];
-        }
-        
-        int currMinRankAdj = k;
-        rank[i] = k;
+        vis[i] = 1;
+        tin[i] = timer;
+        low[i] = timer;
+        timer++;
         
         for(auto it: adj[i]){
-            if(rank[it] == k-1 || rank[it] > rank[i]){
+            if(it == par){
                 continue;
             }
-            
-            int adjrank = dfs(it,k+1,rank,ans,adj);
-            currMinRankAdj = min(currMinRankAdj,adjrank);
-            
-            if(adjrank > rank[i]){
-                ans.push_back({i,it});
+            else if(!vis[it]){
+                dfs(it,i,vis,tin,low,ans,adj);
+                
+                low[i] = min(low[i], low[it]);
+                
+                if(tin[i] < low[it]){
+                    ans.push_back({i,it});
+                }
+            }
+            else{
+                low[i] = min(low[i], low[it]);
             }
         }
-        
-        return currMinRankAdj;
     }
     vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
         vector<int>adj[n];
@@ -35,10 +37,9 @@ public:
         }
         
         vector<vector<int>>ans;
-        vector<int>rank(n,-2);
+        vector<int>tin(n,0),low(n,0),vis(n,0);
         
-        dfs(0,0,rank,ans,adj);
-        
+        dfs(0,-1,vis,tin,low,ans,adj);
         
         return ans;
     }
