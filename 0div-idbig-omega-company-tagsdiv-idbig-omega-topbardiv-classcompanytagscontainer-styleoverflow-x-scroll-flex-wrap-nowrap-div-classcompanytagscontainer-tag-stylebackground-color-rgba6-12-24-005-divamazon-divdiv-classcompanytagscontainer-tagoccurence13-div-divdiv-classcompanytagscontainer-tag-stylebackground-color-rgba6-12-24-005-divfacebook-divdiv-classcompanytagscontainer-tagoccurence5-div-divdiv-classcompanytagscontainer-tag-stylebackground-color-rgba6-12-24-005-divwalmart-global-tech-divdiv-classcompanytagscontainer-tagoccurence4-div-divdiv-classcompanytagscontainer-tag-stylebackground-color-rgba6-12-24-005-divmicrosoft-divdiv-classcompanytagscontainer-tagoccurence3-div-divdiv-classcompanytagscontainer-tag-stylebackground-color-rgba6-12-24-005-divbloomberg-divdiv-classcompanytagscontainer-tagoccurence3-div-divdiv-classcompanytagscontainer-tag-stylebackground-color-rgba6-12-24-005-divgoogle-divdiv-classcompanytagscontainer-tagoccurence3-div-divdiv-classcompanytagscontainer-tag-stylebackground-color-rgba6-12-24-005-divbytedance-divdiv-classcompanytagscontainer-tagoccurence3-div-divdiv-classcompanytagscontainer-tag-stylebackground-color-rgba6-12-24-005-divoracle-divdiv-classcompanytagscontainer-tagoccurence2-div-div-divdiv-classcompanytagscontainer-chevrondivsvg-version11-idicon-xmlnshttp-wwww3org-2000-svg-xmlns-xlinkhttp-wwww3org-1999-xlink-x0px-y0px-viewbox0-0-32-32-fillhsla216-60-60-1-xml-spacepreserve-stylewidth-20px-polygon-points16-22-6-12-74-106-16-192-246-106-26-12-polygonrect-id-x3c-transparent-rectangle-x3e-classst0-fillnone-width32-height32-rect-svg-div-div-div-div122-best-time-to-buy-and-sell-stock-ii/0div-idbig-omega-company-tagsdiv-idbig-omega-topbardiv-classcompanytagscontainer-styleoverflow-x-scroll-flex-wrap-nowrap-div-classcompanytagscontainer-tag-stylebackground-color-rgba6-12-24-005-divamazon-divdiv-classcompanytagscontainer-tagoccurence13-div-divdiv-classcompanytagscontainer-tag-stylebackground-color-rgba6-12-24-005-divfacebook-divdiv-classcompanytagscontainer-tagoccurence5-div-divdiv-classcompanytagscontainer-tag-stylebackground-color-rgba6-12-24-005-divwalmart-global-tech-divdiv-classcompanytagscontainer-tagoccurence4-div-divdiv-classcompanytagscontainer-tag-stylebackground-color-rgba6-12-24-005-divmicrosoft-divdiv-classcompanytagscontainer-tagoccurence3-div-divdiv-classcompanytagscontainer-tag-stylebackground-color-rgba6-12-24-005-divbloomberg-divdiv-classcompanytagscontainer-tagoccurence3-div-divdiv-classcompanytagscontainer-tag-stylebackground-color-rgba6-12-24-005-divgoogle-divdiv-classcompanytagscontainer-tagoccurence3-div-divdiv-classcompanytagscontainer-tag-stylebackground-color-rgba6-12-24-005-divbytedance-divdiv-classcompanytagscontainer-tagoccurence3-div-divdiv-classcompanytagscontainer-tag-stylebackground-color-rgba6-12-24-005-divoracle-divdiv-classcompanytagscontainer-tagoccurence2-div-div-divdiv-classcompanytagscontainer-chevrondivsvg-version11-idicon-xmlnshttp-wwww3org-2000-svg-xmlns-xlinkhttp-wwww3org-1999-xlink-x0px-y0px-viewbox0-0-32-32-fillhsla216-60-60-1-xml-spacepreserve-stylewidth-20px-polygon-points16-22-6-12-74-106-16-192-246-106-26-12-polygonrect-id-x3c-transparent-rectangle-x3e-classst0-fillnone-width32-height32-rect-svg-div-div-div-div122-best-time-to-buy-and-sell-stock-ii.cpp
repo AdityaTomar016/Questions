@@ -23,7 +23,24 @@ public:
     }
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
-        vector<vector<int>>dp(n,vector<int>(2,-1));
-        return solve(0,1,prices,dp);
+        vector<vector<int>>dp(n+1,vector<int>(2,0));
+        
+        for(int i=n-1;i>=0;i--){
+            for(int j=0;j<2;j++){
+                int take=0,nottake=0;
+        
+                if(j == 1){
+                    take = -prices[i] + dp[i+1][0];
+                    nottake = dp[i+1][1];
+                }
+                else{
+                    take = prices[i] + dp[i+1][1];
+                    nottake = dp[i+1][0];
+                }
+
+                dp[i][j] = max(take,nottake);
+            }
+        }
+        return dp[0][1];
     }
 };
